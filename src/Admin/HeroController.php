@@ -32,7 +32,7 @@ final class HeroController extends Controller
     private const DEFAULT_SIZE = [1920, 420];
     /** Больше слайдов первому экрану не нужно — их и так листают редко. */
     private const MAX_SLIDES = 8;
-    private const FOCUS = ['center', 'top', 'bottom', 'left', 'right'];
+    private const FOCUS = ['right', 'center', 'top', 'bottom', 'left'];
 
     public function index(array $params = []): string
     {
@@ -127,7 +127,7 @@ final class HeroController extends Controller
             $this->back('Слайдов уже ' . self::MAX_SLIDES . ' — замените один из них или уберите лишний.', 'bad');
         }
         $slot = $n ?: count($files) + 1;
-        $focus = in_array($_POST['focus'] ?? '', self::FOCUS, true) ? $_POST['focus'] : 'center';
+        $focus = in_array($_POST['focus'] ?? '', self::FOCUS, true) ? $_POST['focus'] : 'right';
         [$width, $height] = $this->size();
 
         if ($n !== 0) {

@@ -712,7 +712,7 @@ a:hover { color: var(--c-brick); }
 .hero__bg { position: absolute; inset: 0; z-index: -2; }
 .hero__slide {
   position: absolute; inset: 0;
-  background-size: cover; background-position: center;
+  background-size: cover; background-position: right center;
   opacity: 0; transition: opacity 1.2s ease;
 }
 .hero__slide.is-active { opacity: 1; }

@@ -18,11 +18,11 @@ use Sklad\Core\View;
 $e = [View::class, 'e'];
 [$w, $h] = $size;
 $focusNames = [
+    'right' => 'правый край (техника)',
     'center' => 'середину',
+    'left' => 'левый край',
     'top' => 'верх',
     'bottom' => 'низ',
-    'left' => 'левый край',
-    'right' => 'правый край',
 ];
 
 $heroOverlay = $heroOverlay ?? [
@@ -80,7 +80,7 @@ $uploadForm = static function (int $n) use ($e, $adminPath, $token, $focusNames,
         . '<input class="val" id="' . $id . '" type="file" name="image" accept="image/jpeg,image/png,image/webp" required data-hero-file>'
         . '<fieldset class="herofocus"><legend class="lbl">Если снимок не той формы — что оставить</legend>';
     foreach ($focusNames as $value => $label) {
-        $html .= '<label><input type="radio" name="focus" value="' . $value . '"' . ($value === 'center' ? ' checked' : '')
+        $html .= '<label><input type="radio" name="focus" value="' . $value . '"' . ($value === 'right' ? ' checked' : '')
             . '> ' . $e($label) . '</label>';
     }
 
@@ -103,10 +103,10 @@ $uploadForm = static function (int $n) use ($e, $adminPath, $token, $focusNames,
   .heroslides { display: grid; gap: 1.25rem; margin-top: .75rem; }
   .heroslide { display: grid; grid-template-columns: minmax(280px, 560px) minmax(240px, 1fr); gap: 1.25rem; align-items: start;
                padding: 1rem; border: 1px solid #e2e5ea; border-radius: 8px; background: #fff; }
-  .heroslide__media { position: relative; aspect-ratio: <?= (int) $w ?> / <?= (int) $h ?>; background: #232a38 center / cover no-repeat;
+  .heroslide__media { position: relative; aspect-ratio: <?= (int) $w ?> / <?= (int) $h ?>; background: #232a38 right center / cover no-repeat;
                       border-radius: 6px; overflow: hidden; container-type: inline-size; }
   .heroslide__media img.heroslide__bg,
-  .heroslide__media > img:not(.heromock__brand) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+  .heroslide__media > img:not(.heromock__brand) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: right center; z-index: 0; }
   .heroslide__media > .note { position: absolute; left: .5rem; bottom: .5rem; z-index: 5; padding: .15rem .45rem; border-radius: 4px;
                               background: rgba(0,0,0,.65); color: #fff; font-size: .75rem; }
   .heromedia__zoom { position: absolute; top: .5rem; right: .5rem; z-index: 5; padding: .25rem .55rem; font-size: .75rem;
@@ -175,7 +175,7 @@ $uploadForm = static function (int $n) use ($e, $adminPath, $token, $focusNames,
                       line-height: 1; border-radius: 4px; }
   .heromodal__close:hover { color: #fff; background: rgba(255,255,255,.1); }
   .heromodal__body { padding: 1.25rem; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; }
-  .heromodal__stage { position: relative; background: #232a38 center / cover no-repeat; overflow: hidden; transition: width .2s ease, height .2s ease; }
+  .heromodal__stage { position: relative; background: #232a38 right center / cover no-repeat; overflow: hidden; transition: width .2s ease, height .2s ease; }
   .heromodal__stage.is-pc { width: 100%; max-width: 1100px; aspect-ratio: <?= (int) $w ?> / <?= (int) $h ?>; border-radius: 8px;
                             box-shadow: 0 8px 30px rgba(0,0,0,.4); container-type: inline-size; }
   .heromodal__stage.is-ipad { width: 940px; max-width: 90vw; aspect-ratio: 1194 / <?= (int) $h ?>; border-radius: 14px;

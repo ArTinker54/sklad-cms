@@ -48,15 +48,15 @@
     var url = form.getAttribute('data-hero-url');
     if (!box || !url) return;
     var focus = form.querySelector('input[name="focus"]:checked');
-    var posKey = focus ? focus.value : 'center';
+    var posKey = focus ? focus.value : 'right';
     box.style.backgroundImage = 'url("' + url + '")';
-    box.style.backgroundPosition = POS[posKey] || 'center center';
+    box.style.backgroundPosition = POS[posKey] || 'right center';
     box.hidden = false;
 
     // Если открыт крупный просмотр для этой же формы — синхронизируем
     if (modal && modal.open && currentForm === form && stage) {
       stage.style.backgroundImage = 'url("' + url + '")';
-      stage.style.backgroundPosition = POS[posKey] || 'center center';
+      stage.style.backgroundPosition = POS[posKey] || 'right center';
       syncFocusButtons(posKey);
     }
   }
@@ -73,7 +73,7 @@
   function openZoom(media) {
     if (!modal || !stage) return;
     var url = '';
-    var pos = 'center center';
+    var pos = 'right center';
     var isUpload = false;
     var form = media.closest('form.heroform');
 
@@ -81,8 +81,8 @@
       url = form.getAttribute('data-hero-url');
       if (!url) return;
       var checked = form.querySelector('input[name="focus"]:checked');
-      var val = checked ? checked.value : 'center';
-      pos = POS[val] || 'center center';
+      var val = checked ? checked.value : 'right';
+      pos = POS[val] || 'right center';
       isUpload = true;
       currentForm = form;
       syncFocusButtons(val);
