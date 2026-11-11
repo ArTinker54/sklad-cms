@@ -1,0 +1,316 @@
+/* ==========================================================================
+   Что добавилось при переезде на MODX.
+
+   Отдельным файлом, а не правкой main.css: main.css — это вёрстка,
+   собранная в прототипе, и её ещё будут переносить оттуда целиком.
+   Здесь только то, чего в статике не было, — постраничная навигация
+   вместо кнопки «показать ещё» и список подразделов.
+   ========================================================================== */
+
+/* --- подразделы каталога — плитками со снимком ---
+   Раньше это был ряд текстовых ссылок. «С весами» и «С короткими вилами»
+   на глаз не различаются, а по картинке видно сразу, о чём раздел.
+   Геометрия как на b2b-store.example.ru: снимок слева, название справа,
+   по три плитки в ряд. */
+.subtiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-4);
+  margin: var(--s-6) 0 var(--s-8);
+}
+
+.subtile {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: 88px;
+  padding: var(--s-2) var(--s-4) var(--s-2) var(--s-3);
+  background: var(--c-bg);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-sm);
+  color: var(--c-ink);
+  text-decoration: none;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+.subtile:hover,
+.subtile:focus-visible {
+  border-color: var(--c-yellow);
+  box-shadow: var(--sh-md);
+  color: var(--c-ink);
+}
+
+/* Место под снимок держим всегда: без него плитки в ряду разъезжаются,
+   когда у одного подраздела фотографии ещё нет. */
+.subtile__pic {
+  flex: 0 0 70px;
+  width: 70px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+}
+
+.subtile__pic img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.subtile__name {
+  flex: 1 1 auto;
+  font-weight: 700;
+  line-height: var(--lh-snug);
+}
+
+.subtile__n {
+  flex: 0 0 auto;
+  font-size: var(--fs-sm);
+  color: var(--c-muted);
+}
+
+@media (max-width: 1023px) {
+  .subtiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 519px) {
+  .subtiles { grid-template-columns: minmax(0, 1fr); gap: var(--s-3); }
+}
+
+/* --- популярные запросы ---
+   Ниже плиток подразделов и по файлу, и по странице: сначала человек видит
+   устройство раздела, потом короткие пути к тому, что спрашивают чаще всего.
+   Правила стоят ПОСЛЕ общих `a` и `a:hover` из main.css — при равной
+   вескости побеждает последнее, и цвет ссылки брался бы оттуда. */
+.tagcloud {
+  margin: 0 0 var(--s-8);
+  padding-bottom: var(--s-5);
+  border-bottom: 1px solid var(--c-line-soft);
+}
+
+/* Обычный вес: это подпись к перечню ссылок, а не заголовок части страницы.
+   Полужирным она спорила бы за внимание с названием раздела над ней. */
+.tagcloud__head {
+  margin: 0 0 var(--s-3);
+  font-size: var(--fs-md);
+  font-weight: 400;
+  color: var(--c-muted);
+}
+
+/* Промежуток между колонками заметно больше межстрочного: иначе при переносе
+   на вторую строку соседние ссылки читаются как одна сплошная простыня и
+   глазом не разделяются. */
+.tagcloud__list {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--s-6);
+  row-gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Длинный запрос переносится внутри своей колонки: без ограничения ширины
+   одна такая строка растягивала бы страницу и давала бы боковую прокрутку
+   на узком экране. */
+.tagcloud__item { max-width: 100%; }
+
+.tagcloud__link {
+  color: var(--c-graphite);
+  font-weight: 700;
+  line-height: var(--lh-snug);
+  overflow-wrap: anywhere;
+}
+
+.tagcloud__link:hover,
+.tagcloud__link:focus-visible {
+  color: var(--c-brick);
+  text-decoration: underline;
+}
+
+@media (max-width: 519px) {
+  /* На узкой полосе широкий зазор оставлял бы в строке по одной ссылке. */
+  .tagcloud__list { column-gap: var(--s-4); row-gap: var(--s-1); }
+
+  /* Пальцем в строку высотой в двадцать пикселей попасть трудно, а промах
+     здесь уводит в соседний раздел. Поднимаем цель нажатия отступами: на
+     раскладку они не влияют — ссылки и так идут в несколько строк. */
+  .tagcloud__link {
+    display: inline-block;
+    max-width: 100%;
+    padding: var(--s-2) 0;
+  }
+}
+
+/* --- сбой отправки заявки ---
+   В прототипе формы никуда не уходили, поэтому и сообщать было не о чем.
+   Показываем причину прямо над кнопкой: форма при этом остаётся
+   заполненной, чтобы человек мог повторить отправку. */
+.form__error {
+  margin: 0 0 var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-left: 3px solid var(--c-brick);
+  background: #fdf0ed;
+  color: var(--c-brick-dk);
+  font-size: var(--fs-base);
+  font-weight: 600;
+}
+
+/* --- метка акции ---
+   В прототипе значок скидки лежал поверх снимка и закрывал часть
+   техники — как раз то, ради чего человек на карточку и смотрит.
+   Ставим его строкой выше, в свободном поле карточки. */
+.card__sale {
+  margin: 0;
+  padding: var(--s-3) var(--s-3) 0;
+}
+
+.card__sale .badge {
+  display: inline-block;
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* Карточка без акции не должна проседать по высоте относительно
+   соседней с меткой — сетка выравнивает строки по самой высокой. */
+.cards .card {
+  display: flex;
+  flex-direction: column;
+}
+
+.cards .card__body {
+  flex: 1 1 auto;
+}
+
+/* --- «показать ещё» ---
+   В прототипе кнопка была частью сгенерированной страницы раздела.
+   Здесь сетку дорисовывает общий скрипт, оформление переехало сюда. */
+.more {
+  margin: var(--s-8) 0 0;
+  text-align: center;
+}
+
+.more .btn {
+  width: auto;
+  padding: 0 var(--s-8);
+}
+
+/* --- постраничная навигация ---
+   Имена классов свои. Раньше здесь лежали те, что генерировал pdoPage
+   в MODX, — разметку он писал сам, и подгонять оформление под чужие
+   имена было проще. Движок сменился, разметку пишем мы, и стили,
+   оставшиеся от прежних имён, просто ни к чему не цеплялись:
+   страницы каталога шли голыми ссылками. */
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+  margin: var(--s-8) 0 var(--s-4);
+}
+
+.pager__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap);
+  height: var(--tap);
+  padding: 0 var(--s-3);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  color: var(--c-graphite);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+
+a.pager__item:hover,
+a.pager__item:focus-visible {
+  border-color: var(--c-graphite);
+  background: var(--c-bg-soft);
+}
+
+.pager__item--active {
+  border-color: var(--c-graphite);
+  background: var(--c-graphite);
+  color: var(--c-on-graphite);
+  cursor: default;
+}
+
+@media (max-width: 767px) {
+  /* На узком экране номера переносятся в три ряда и занимают пол-экрана.
+     Сжимаем всё, кроме текущей страницы. */
+  .pager__item:not(.pager__item--active) {
+    min-width: 2.25rem;
+    padding: 0 var(--s-2);
+  }
+}
+
+/* Звёздочка обязательного поля.
+   Правило общее, а не только внутри .field: такая же звёздочка стоит в
+   строке согласия на обработку данных, а она лежит в .consent. */
+.req {
+  color: var(--c-brick);
+  font-weight: 700;
+}
+
+/* Реквизиты в подвале: строкой, тем же тоном, что и оговорка про цены —
+   это справочная строка, а не то, что нужно читать первым. */
+.footer__legal {
+  margin: var(--s-2) 0 0;
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: #8b93a1;
+}
+
+/* --- разворачивающиеся разделы о бренде ---
+   Текст лежит в разметке и приходит с сервера, а не подгружается по
+   нажатию: поисковик кнопок не жмёт, и подгруженное он бы не увидел.
+   Прячет его браузер сам — это обычный <details>, без единой строчки
+   скрипта. */
+.brand__lead { max-width: 70ch; margin: 0 0 var(--s-6); color: var(--c-muted); }
+
+.brand__part {
+  border-bottom: 1px solid var(--c-line);
+}
+
+.brand__part summary {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-4) 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.brand__part summary::-webkit-details-marker { display: none; }
+
+/* Знак «развернуть» рисуем сами: у встроенного вид разный во всех
+   браузерах, а поворачивать его нечем. */
+.brand__part summary::before {
+  content: '+';
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-sm, 3px);
+  font-size: var(--fs-base);
+  line-height: 1.35rem;
+  text-align: center;
+  color: var(--c-muted);
+}
+
+.brand__part[open] summary::before { content: '−'; }
+.brand__part summary h3 { margin: 0; font-size: var(--fs-lg); }
+.brand__part summary:hover h3 { color: var(--c-graphite); }
+
+.brand__text {
+  max-width: 78ch;
+  padding: 0 0 var(--s-5) 2.25rem;
+}
+
+.brand__text p { margin: 0 0 var(--s-3); }

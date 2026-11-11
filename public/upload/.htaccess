@@ -1,0 +1,21 @@
+# Здесь лежит то, что залили через админку. Исполняться это не должно
+# ни при каких обстоятельствах: если однажды под видом фотографии
+# зальют .php, он останется просто файлом на диске.
+#
+# Запрет стоит именно здесь, а не в public: там лежит index.php, и
+# общий запрет положил бы весь сайт.
+
+Options -Indexes -ExecCGI
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+<FilesMatch "\.(?i:php|phtml|phar|pl|py|cgi|sh|htaccess)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Deny from all
+    </IfModule>
+</FilesMatch>

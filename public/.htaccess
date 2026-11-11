@@ -1,0 +1,43 @@
+# Всё, что не файл на диске, уходит в index.php.
+
+Options -Indexes -MultiViews
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Хостинг может отдавать сайт из подпапки — тогда RewriteBase
+    # раскомментировать и поправить.
+    # RewriteBase /
+
+    # Значки браузеры и обходчики просят в корне, как повелось, хотя в
+    # разметке стоит их настоящий адрес. Отдаём тем же файлом, а не
+    # копией: две копии значка рано или поздно разъедутся, и на вкладке
+    # окажется знак прежней марки. На стенде такой запрос был самым
+    # частым «не найдено» в журнале — десять из сорока девяти.
+    RewriteRule ^favicon\.ico$ assets/img/favicon.ico [L]
+    RewriteRule ^apple-touch-icon(-precomposed)?\.png$ assets/img/apple-touch-icon.png [L]
+
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Шрифты лежат у нас, а не на чужом домене. Два следствия:
+#
+# — тип нужно объявить самим. Старые сборки Apache про woff2 не знают,
+#   отдают его как поток байт, и часть браузеров такой шрифт не берёт —
+#   страница молча рисуется системным;
+# — и их стоит закешировать надолго. Содержимое файла не меняется, имя
+#   тоже: набор и насыщенность в имени, а другой набор — другое имя.
+#   Без этого шрифты перезапрашиваются на каждой странице.
+<IfModule mod_mime.c>
+    AddType font/woff2 .woff2
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.woff2$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>

@@ -1,0 +1,29 @@
+# Настройки и секреты
+config/config.php
+.env
+.env.local
+
+# Загрузки и пользовательские медиа
+public/upload/*
+!public/upload/.gitkeep
+!public/upload/.htaccess
+
+# Кэш, сессии, логи
+storage/cache/*
+storage/logs/*
+storage/sessions/*
+!storage/.gitkeep
+
+# Клиентские данные и дампы
+data/
+*.sql.gz
+*.tar.gz
+*.zip
+
+# Временные файлы и системный мусор
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+*.swp
